@@ -1,47 +1,36 @@
 package pl.sdacademy.snake;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Snake {
+    private Point head;
+    private List<Point> body;
     private Direction direction;
-    private Piont head;
-    private List<Piont> body;  //lista, bo ma dużo przydatnych metod
 
-    public Snake(Piont head, List<Piont> body, Direction direction) {
+    public Snake(Point head, List<Point> body, Direction direction) {
         this.head = head;
+        // TODO wywolanie konstruktora
         this.body = new ArrayList<>(body);
         this.direction = direction;
-
     }
 
+    public Snake() {
+        this(new Point(0, 0), Collections.emptyList(), Direction.RIGHT);
+    }
 
-    public void move(Snake snake) {
-        body.add(0, head);
-
-        switch (direction) {
-            case UP:
-                head = new Piont(head.getX(), head.getY() - 1);
-                break;
-            case RIGHT:
-                head = new Piont(head.getX() + 1, head.getY());
-                break;
-            case DOWN:
-                head = new Piont(head.getX(), head.getY() + 1);
-                break;
-            case LEFT:
-                head = new Piont(head.getX() - 1, head.getY());
-                break;
-
-        }
-//wąż utraci ogon
+    public void cutTail() {
+        // wąż utraci ogon (ostatni punkt ciała)
         body.remove(body.size() - 1);
-
     }
-//    public boolean contains(Piont point){
-//        return  head
-//    }
+
+    public void expand() {
+        // stara głowa utworzy pierwszy punkt ciała węża
+        body.add(0, head);
+        // nowa głowa będzie nowym punktem - wynikiem przesunięcia starej głowy w kierunku ruchu węża
+        head = head.neighbour(direction);
+    }
 
     @Override
     public String toString() {
@@ -49,5 +38,21 @@ public class Snake {
                 "head=" + head +
                 ", body=" + body +
                 '}';
+    }
+
+    public Point getHead() {
+        return head;
+    }
+
+    public List<Point> getBody() {
+        return body;
+    }
+
+    public boolean contains(Point point) {
+        return head.equals(point) || body.contains(point);
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }
